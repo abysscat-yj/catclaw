@@ -1,0 +1,23 @@
+node_modules/
+dist/
+.vite/
+out/
+*.dmg
+.DS_Store
+
+# Sensitive / user data
+catclaw-settings.json
+*.env
+*.env.*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Claude Code
+.claude/
+
+# Build artifacts
+*.tsbuildinfo
