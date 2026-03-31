@@ -1,6 +1,6 @@
-# CatClaw - Mac 桌面 AI Agent
+# CatClaw - 小虾猫 - 你的专属 Mac 桌面 AI Agent 龙虾
 
-> 基于 [OpenClaw](https://github.com/anthropics/claude-code) 核心设计思路的**轻量化桌面通用 Agent**，以 ~6000 行 TypeScript 代码实现了 Agent Loop、Tool Pipeline、多模型接入、自定义 Skill、定时任务、思考过程可视化等核心能力。
+> 基于 [OpenClaw](https://github.com/anthropics/claude-code) 核心设计思路的**轻量化桌面通用 Agent**，以 ~6000 行 TypeScript 代码实现了 Agent Loop、Tool Pipeline、多厂商大模型接入、自定义 Skill、定时任务、思考过程可视化等核心能力。
 
 CatClaw 是一个基于 Electron 的 macOS 桌面 AI 助手，支持多 LLM 服务商接入，具备终端命令执行、文件系统操作、屏幕截图等系统级工具能力，并提供自定义 Skill 编排和定时任务调度功能。
 
