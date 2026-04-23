@@ -4,7 +4,7 @@
 
 CatClaw 是一个基于 Electron 的 macOS 桌面 AI 助手，支持多 LLM 服务商接入，具备终端命令执行、文件系统操作、屏幕截图等系统级工具能力，并提供自定义 Skill 编排、定时任务调度和趣味宠物收集养成功能。
 
-![image](https://github.com/user-attachments/assets/4bae780c-7805-4f2a-9d20-b860ff6f20f0)
+<img width="2182" height="1478" alt="image" src="https://github.com/user-attachments/assets/510b3003-7219-4963-bb67-4851ab672288" />
 
 
 ## 与 OpenClaw 的关系
