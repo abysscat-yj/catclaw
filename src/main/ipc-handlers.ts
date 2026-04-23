@@ -19,6 +19,66 @@ import {
 import { Scheduler } from "./scheduler.js";
 import { CustomSkillStore } from "./custom-skill-store.js";
 import { createCustomSkillTool, buildInputSchema } from "./tools/custom-skill-tool.js";
+import { PetStore, COINS_PER_CONVERSATION } from "./pet-store.js";
+import { DEFAULT_SKILLS } from "./default-skills.js";
+
+// Extract a skill JSON object from agent text that may contain markdown, explanations, etc.
+function extractSkillJson(text: string): { name: string; description: string; parameters: unknown[]; promptTemplate: string } | null {
+  const candidates: string[] = [];
+
+  // Strategy 1: code fence
+  const fenceRe = /```(?:json)?\s*\n?([\s\S]*?)\n?\s*```/g;
+  let m;
+  while ((m = fenceRe.exec(text)) !== null) {
+    candidates.push(m[1].trim());
+  }
+
+  // Strategy 2: find outermost { ... } with "name" and "promptTemplate" keys
+  // Use a brace-counting approach to find balanced JSON objects
+  const startIdx = text.indexOf("{");
+  if (startIdx >= 0) {
+    let depth = 0;
+    let inString = false;
+    let escape = false;
+    for (let i = startIdx; i < text.length; i++) {
+      const ch = text[i];
+      if (escape) { escape = false; continue; }
+      if (ch === "\\") { escape = true; continue; }
+      if (ch === '"') { inString = !inString; continue; }
+      if (inString) continue;
+      if (ch === "{") depth++;
+      if (ch === "}") {
+        depth--;
+        if (depth === 0) {
+          candidates.push(text.slice(startIdx, i + 1));
+          break;
+        }
+      }
+    }
+  }
+
+  // Strategy 3: raw trimmed text
+  candidates.push(text.trim());
+
+  for (const candidate of candidates) {
+    try {
+      const obj = JSON.parse(candidate);
+      if (obj && typeof obj === "object" && obj.name && obj.promptTemplate) {
+        return {
+          name: String(obj.name).trim().replace(/\s+/g, "_"),
+          description: String(obj.description || "").trim(),
+          parameters: Array.isArray(obj.parameters) ? obj.parameters : [
+            { name: "request", type: "string", description: "What to do", required: true },
+          ],
+          promptTemplate: String(obj.promptTemplate),
+        };
+      }
+    } catch {
+      // Try next candidate
+    }
+  }
+  return null;
+}
 
 // Simple JSON file store
 class JsonStore<T extends Record<string, unknown>> {
@@ -151,6 +211,9 @@ export function registerIpcHandlers(window: BrowserWindow): AgentLoop {
   // Initialize with active provider
   applyProviderToAgent();
 
+  // PetStore must be initialized before the agent handler to award coins
+  const petStore = new PetStore(getDb());
+
   // --- Agent ---
   ipcMain.handle(
     IPC.AGENT_SEND_MESSAGE,
@@ -161,6 +224,12 @@ export function registerIpcHandlers(window: BrowserWindow): AgentLoop {
         maxTokens: settings.maxTokens,
         customSystemPrompt: settings.customSystemPrompt,
       });
+      // Award paw coins on successful conversation completion
+      try {
+        petStore.addCoins(COINS_PER_CONVERSATION);
+      } catch {
+        // Ignore coin errors
+      }
     }
   );
 
@@ -309,6 +378,7 @@ export function registerIpcHandlers(window: BrowserWindow): AgentLoop {
 
   // --- Skills ---
   const skillStore = new CustomSkillStore(getDb());
+  skillStore.seedDefaults(DEFAULT_SKILLS);
   const registeredCustomSkillNames = new Set<string>();
   const BUILTIN_TOOL_NAMES = new Set(["exec", "filesystem", "screenshot"]);
 
@@ -388,6 +458,42 @@ export function registerIpcHandlers(window: BrowserWindow): AgentLoop {
     return true;
   });
 
+  ipcMain.handle(IPC.SKILLS_IMPORT_URL, async (_event, url: string) => {
+    const prompt = `Fetch and analyze this URL to extract a skill definition: ${url}
+
+The URL might be:
+- A GitHub repo containing a SKILL.md or README describing a skill/tool
+- A documentation page describing a workflow or capability
+- Any page describing a reusable tool, template, or automation
+
+Your task:
+1. Use the exec tool with curl to fetch the URL content. For GitHub repos, also try fetching key files like SKILL.md, README.md, or the directory listing via the GitHub API.
+2. Analyze the content to understand what the skill does, when to trigger it, and how it works.
+3. Extract a complete skill definition and return it as JSON.
+
+CRITICAL: Your final response must be ONLY the JSON below — no other text, no markdown, no explanation before or after:
+{"name":"snake_case_name","description":"1-2 sentence description","parameters":[{"name":"request","type":"string","description":"What the user wants","required":true}],"promptTemplate":"Full prompt template with {{request}} placeholder. Include all best practices and instructions from the source."}`;
+
+    const result = await agentLoop!.runSubTask(prompt, getSettingsForSubTask());
+
+    // Try multiple strategies to extract JSON from agent response
+    const parsed = extractSkillJson(result);
+    if (parsed) return parsed;
+
+    // Fallback: ask a second sub-task to extract just the JSON from the messy output
+    const cleanupPrompt = `The text below is an agent response that contains a skill definition somewhere in it. Extract ONLY the JSON object with fields: name, description, parameters, promptTemplate. Return nothing but the JSON.
+
+---
+${result.slice(0, 8000)}
+---`;
+
+    const cleaned = await agentLoop!.runSubTask(cleanupPrompt, getSettingsForSubTask());
+    const parsed2 = extractSkillJson(cleaned);
+    if (parsed2) return parsed2;
+
+    throw new Error("Could not extract a valid skill definition from the URL. The agent may not have been able to access the content.");
+  });
+
   // --- Scheduled Tasks ---
   const scheduler = new Scheduler(getDb());
 
@@ -430,6 +536,47 @@ export function registerIpcHandlers(window: BrowserWindow): AgentLoop {
   ipcMain.handle(IPC.SCHEDULES_DELETE, (_event, id: string) => {
     scheduler.delete(id);
     return true;
+  });
+
+  // --- Pets ---
+  // petStore already initialized above (before agent handler) to enable coin rewards
+
+  ipcMain.handle(IPC.PETS_LIST, () => {
+    return petStore.listBuddies();
+  });
+
+  ipcMain.handle(IPC.PETS_DRAW, () => {
+    return petStore.drawBuddy();
+  });
+
+  ipcMain.handle(IPC.PETS_GET_STATS, () => {
+    return { pawCoins: petStore.getCoins() };
+  });
+
+  ipcMain.handle(IPC.PETS_ADD_COINS, (_event, amount: number) => {
+    return { pawCoins: petStore.addCoins(amount) };
+  });
+
+  ipcMain.handle(IPC.PETS_GET_ACTIVE, () => {
+    return petStore.getActiveBuddy();
+  });
+
+  ipcMain.handle(IPC.PETS_SET_ACTIVE, (_event, buddyId: string | null) => {
+    petStore.setActiveBuddy(buddyId);
+    return true;
+  });
+
+  ipcMain.handle(IPC.PETS_GET_SPEECH, () => {
+    return petStore.getRandomSpeech();
+  });
+
+  ipcMain.handle(IPC.PETS_RENAME, (_event, buddyId: string, name: string) => {
+    petStore.renameBuddy(buddyId, name);
+    return true;
+  });
+
+  ipcMain.handle(IPC.PETS_GET_CLICK_SPEECH, () => {
+    return petStore.getClickSpeech();
   });
 
   return agentLoop;

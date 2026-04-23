@@ -25,6 +25,7 @@ export const IPC = {
   SKILLS_CREATE: "skills:create",
   SKILLS_UPDATE: "skills:update",
   SKILLS_DELETE: "skills:delete",
+  SKILLS_IMPORT_URL: "skills:import-url",
 
   // Scheduled Tasks
   SCHEDULES_LIST: "schedules:list",
@@ -34,4 +35,15 @@ export const IPC = {
 
   // Permissions
   PERMISSIONS_CHECK: "permissions:check",
+
+  // Pets / Buddies
+  PETS_LIST: "pets:list",
+  PETS_DRAW: "pets:draw",
+  PETS_GET_STATS: "pets:get-stats",
+  PETS_ADD_COINS: "pets:add-coins",
+  PETS_GET_ACTIVE: "pets:get-active",
+  PETS_SET_ACTIVE: "pets:set-active",
+  PETS_GET_SPEECH: "pets:get-speech",
+  PETS_RENAME: "pets:rename",
+  PETS_GET_CLICK_SPEECH: "pets:get-click-speech",
 } as const;

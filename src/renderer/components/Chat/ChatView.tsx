@@ -1,6 +1,6 @@
 // ChatView - main chat interface combining message list and input
 
-import React from "react";
+import React, { useCallback } from "react";
 import { useConversationStore } from "../../stores/conversation-store";
 import { useSettingsStore, getActiveProvider } from "../../stores/settings-store";
 import { useAgent } from "../../hooks/useAgent";
@@ -17,13 +17,42 @@ export default function ChatView() {
   const activeProvider = getActiveProvider({ providers, activeProviderId });
   const hasApiKey = activeProvider?.hasApiKey ?? false;
 
-  if (!activeId) {
-    return (
-      <div className="flex-1 flex items-center justify-center text-gray-400 dark:text-gray-500">
-        <p>Select or create a conversation</p>
-      </div>
-    );
-  }
+  // Wraps sendMessage to auto-create a conversation if none is selected
+  const handleSend = useCallback(
+    async (text: string) => {
+      if (!text.trim()) return;
+
+      let convId = activeId;
+      if (!convId) {
+        const conv = await window.catclaw.newConversation();
+        const convs = await window.catclaw.listConversations();
+        useConversationStore.getState().setConversations(convs);
+        useConversationStore.getState().setActiveConversation(conv.id);
+        useConversationStore.getState().setMessages([]);
+        convId = conv.id;
+
+        // Manually send since the hook's sendMessage reads activeConversationId from store
+        // which may not have propagated yet
+        const store = useConversationStore.getState();
+        store.setError(null);
+        store.setAgentRunning(true);
+        store.clearStream();
+        store.clearToolCalls();
+        store.addMessage({
+          id: crypto.randomUUID(),
+          conversationId: convId,
+          role: "user",
+          content: [{ type: "text", text: text.trim() }],
+          createdAt: Date.now(),
+        });
+        await window.catclaw.sendMessage(convId, text.trim());
+        return;
+      }
+
+      sendMessage(text);
+    },
+    [activeId, sendMessage]
+  );
 
   return (
     <div className="flex-1 flex flex-col min-h-0">
@@ -34,10 +63,10 @@ export default function ChatView() {
         </div>
       )}
 
-      <MessageList />
+      <MessageList onSuggestionClick={handleSend} />
 
       <InputBar
-        onSend={sendMessage}
+        onSend={handleSend}
         onCancel={cancel}
         disabled={!hasApiKey}
         isRunning={isRunning}

@@ -44,7 +44,11 @@ export class CustomSkillStore {
         prompt_template TEXT NOT NULL,
         created_at INTEGER NOT NULL,
         updated_at INTEGER NOT NULL
-      )
+      );
+
+      CREATE TABLE IF NOT EXISTS seeded_skills (
+        name TEXT PRIMARY KEY
+      );
     `);
   }
 
@@ -142,6 +146,27 @@ export class CustomSkillStore {
 
   delete(id: string): void {
     this.db.prepare("DELETE FROM custom_skills WHERE id = ?").run(id);
+  }
+
+  seedDefaults(defaults: CreateSkillInput[]): void {
+    const insertSeeded = this.db.prepare(
+      "INSERT OR IGNORE INTO seeded_skills (name) VALUES (?)"
+    );
+    const checkSeeded = this.db.prepare(
+      "SELECT name FROM seeded_skills WHERE name = ?"
+    );
+
+    for (const skill of defaults) {
+      const alreadySeeded = checkSeeded.get(skill.name);
+      if (alreadySeeded) continue;
+
+      try {
+        this.create(skill);
+      } catch {
+        // Skill name may conflict with existing user skill — skip
+      }
+      insertSeeded.run(skill.name);
+    }
   }
 
   private toRecord(row: {

@@ -39,6 +39,7 @@ export function buildSystemPrompt(customPrompt?: string): string {
     `- **exec**: Execute any shell command the user could run in Terminal (ls, cat, grep, git, python, brew, osascript, open, curl, etc.)`,
     `- **filesystem**: Read, write, list, and inspect files and directories`,
     `- **screenshot**: Take a screenshot of the Mac screen`,
+    `- Additional skill-based tools are available — check the tool list for specialized capabilities like frontend design, document creation, web search, etc.`,
     ``,
     `## Tips`,
     `- Use \`exec\` with \`osascript\` to control Mac applications via AppleScript.`,

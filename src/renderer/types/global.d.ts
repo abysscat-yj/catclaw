@@ -48,6 +48,35 @@ declare global {
     createdAt: number;
   }
 
+  interface BuddyAttributes {
+    debugging: number;
+    patience: number;
+    chaos: number;
+    wisdom: number;
+    snark: number;
+  }
+
+  interface BuddyRecord {
+    id: string;
+    speciesId: string;
+    name: string;
+    rarity: "common" | "uncommon" | "rare" | "epic" | "legendary";
+    eyeVariant: string;
+    hatId: string;
+    isShiny: boolean;
+    attributes: BuddyAttributes;
+    obtainedAt: number;
+  }
+
+  interface DrawResult {
+    buddy: BuddyRecord;
+    pawCoins: number;
+  }
+
+  interface PetStats {
+    pawCoins: number;
+  }
+
   interface CatClawApi {
     // Agent
     sendMessage(conversationId: string, message: string): Promise<void>;
@@ -100,6 +129,7 @@ declare global {
     createSkill(data: CustomSkillData): Promise<SkillDefinition>;
     updateSkill(id: string, data: Partial<CustomSkillData>): Promise<boolean>;
     deleteSkill(id: string): Promise<boolean>;
+    importSkillFromUrl(url: string): Promise<CustomSkillData>;
 
     // Scheduled Tasks
     listSchedules(): Promise<ScheduledTask[]>;
@@ -120,6 +150,17 @@ declare global {
       screenRecording: string;
       accessibility: string;
     }>;
+
+    // Pets / Buddies
+    listBuddies(): Promise<BuddyRecord[]>;
+    drawBuddy(): Promise<DrawResult>;
+    getPetStats(): Promise<PetStats>;
+    addPetCoins(amount: number): Promise<PetStats>;
+    getActiveBuddy(): Promise<BuddyRecord | null>;
+    setActiveBuddy(buddyId: string | null): Promise<boolean>;
+    getRandomSpeech(): Promise<string>;
+    renameBuddy(buddyId: string, name: string): Promise<boolean>;
+    getClickSpeech(): Promise<string>;
   }
 
   interface Window {

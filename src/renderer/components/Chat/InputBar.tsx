@@ -50,7 +50,7 @@ export default function InputBar({
   );
 
   return (
-    <div className="border-t border-gray-200 dark:border-gray-700 p-4 bg-white dark:bg-gray-900">
+    <div className="border-t border-gray-200/50 dark:border-gray-700/50 p-4 bg-white dark:bg-gray-900 shadow-[0_-1px_3px_rgba(0,0,0,0.03)]">
       <div className="flex items-end gap-2 max-w-3xl mx-auto">
         <textarea
           ref={textareaRef}
@@ -60,12 +60,12 @@ export default function InputBar({
           placeholder="Message CatClaw..."
           disabled={disabled && !isRunning}
           rows={1}
-          className="flex-1 resize-none rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 disabled:opacity-50 placeholder:text-gray-400"
+          className="flex-1 resize-none rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-400 dark:focus:ring-indigo-400/40 dark:focus:border-indigo-500 disabled:opacity-50 placeholder:text-gray-400 transition-all"
         />
         {isRunning ? (
           <button
             onClick={onCancel}
-            className="shrink-0 rounded-xl bg-red-500 hover:bg-red-600 text-white px-4 py-3 text-sm font-medium transition-colors"
+            className="shrink-0 rounded-xl bg-red-500 hover:bg-red-600 text-white px-4 py-3 text-sm font-medium transition-all shadow-sm hover:shadow-md"
           >
             Stop
           </button>
@@ -73,7 +73,7 @@ export default function InputBar({
           <button
             onClick={handleSend}
             disabled={!text.trim() || disabled}
-            className="shrink-0 rounded-xl bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 dark:disabled:bg-gray-700 text-white px-4 py-3 text-sm font-medium transition-colors disabled:cursor-not-allowed"
+            className="shrink-0 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 disabled:from-gray-300 disabled:to-gray-300 dark:disabled:from-gray-700 dark:disabled:to-gray-700 text-white px-4 py-3 text-sm font-medium transition-all shadow-sm hover:shadow-md disabled:shadow-none disabled:cursor-not-allowed"
           >
             Send
           </button>

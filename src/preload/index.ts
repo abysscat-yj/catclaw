@@ -66,6 +66,8 @@ contextBridge.exposeInMainWorld("catclaw", {
     ipcRenderer.invoke(IPC.SKILLS_UPDATE, id, data),
   deleteSkill: (id: string) =>
     ipcRenderer.invoke(IPC.SKILLS_DELETE, id),
+  importSkillFromUrl: (url: string) =>
+    ipcRenderer.invoke(IPC.SKILLS_IMPORT_URL, url),
 
   // Scheduled Tasks
   listSchedules: () => ipcRenderer.invoke(IPC.SCHEDULES_LIST),
@@ -78,4 +80,15 @@ contextBridge.exposeInMainWorld("catclaw", {
 
   // Permissions
   checkPermissions: () => ipcRenderer.invoke(IPC.PERMISSIONS_CHECK),
+
+  // Pets / Buddies
+  listBuddies: () => ipcRenderer.invoke(IPC.PETS_LIST),
+  drawBuddy: () => ipcRenderer.invoke(IPC.PETS_DRAW),
+  getPetStats: () => ipcRenderer.invoke(IPC.PETS_GET_STATS),
+  addPetCoins: (amount: number) => ipcRenderer.invoke(IPC.PETS_ADD_COINS, amount),
+  getActiveBuddy: () => ipcRenderer.invoke(IPC.PETS_GET_ACTIVE),
+  setActiveBuddy: (buddyId: string | null) => ipcRenderer.invoke(IPC.PETS_SET_ACTIVE, buddyId),
+  getRandomSpeech: () => ipcRenderer.invoke(IPC.PETS_GET_SPEECH),
+  renameBuddy: (buddyId: string, name: string) => ipcRenderer.invoke(IPC.PETS_RENAME, buddyId, name),
+  getClickSpeech: () => ipcRenderer.invoke(IPC.PETS_GET_CLICK_SPEECH),
 });

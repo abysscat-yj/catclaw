@@ -6,6 +6,8 @@ export default function SkillsPanel() {
   const [skills, setSkills] = useState<SkillDefinition[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
+  const [showImport, setShowImport] = useState(false);
+  const [importedData, setImportedData] = useState<CustomSkillData | null>(null);
 
   const refresh = useCallback(async () => {
     const list = await window.catclaw.listSkills();
@@ -45,19 +47,39 @@ export default function SkillsPanel() {
             {customSkills.length} custom, {builtinSkills.length} built-in
           </p>
         </div>
-        <button
-          onClick={() => setShowCreate(!showCreate)}
-          className="rounded-lg bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 text-sm font-medium transition-colors"
-        >
-          {showCreate ? "Cancel" : "+ New Skill"}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => { setShowImport(!showImport); setShowCreate(false); setImportedData(null); }}
+            className="rounded-lg border border-blue-300 dark:border-blue-700 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30 px-3 py-1.5 text-sm font-medium transition-colors"
+          >
+            {showImport ? "Cancel" : "Import URL"}
+          </button>
+          <button
+            onClick={() => { setShowCreate(!showCreate); setShowImport(false); setImportedData(null); }}
+            className="rounded-lg bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 text-sm font-medium transition-colors"
+          >
+            {showCreate ? "Cancel" : "+ New Skill"}
+          </button>
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+        {showImport && (
+          <ImportUrlForm
+            onImported={(data) => {
+              setImportedData(data);
+              setShowImport(false);
+              setShowCreate(true);
+            }}
+          />
+        )}
+
         {showCreate && (
           <CreateSkillForm
+            initialData={importedData}
             onCreated={() => {
               setShowCreate(false);
+              setImportedData(null);
               refresh();
             }}
           />
@@ -280,11 +302,11 @@ function SkillCard({
 
 // --- Create Skill Form ---
 
-function CreateSkillForm({ onCreated }: { onCreated: () => void }) {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [parameters, setParameters] = useState<SkillParameter[]>([]);
-  const [promptTemplate, setPromptTemplate] = useState("");
+function CreateSkillForm({ onCreated, initialData }: { onCreated: () => void; initialData?: CustomSkillData | null }) {
+  const [name, setName] = useState(initialData?.name || "");
+  const [description, setDescription] = useState(initialData?.description || "");
+  const [parameters, setParameters] = useState<SkillParameter[]>(initialData?.parameters || []);
+  const [promptTemplate, setPromptTemplate] = useState(initialData?.promptTemplate || "");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -540,6 +562,77 @@ function EditSkillForm({
           {saving ? "Saving..." : "Save"}
         </button>
       </div>
+    </div>
+  );
+}
+
+// --- Import URL Form ---
+
+function ImportUrlForm({ onImported }: { onImported: (data: CustomSkillData) => void }) {
+  const [url, setUrl] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleImport = useCallback(async () => {
+    if (!url.trim()) return;
+    setLoading(true);
+    setError("");
+    try {
+      const data = await window.catclaw.importSkillFromUrl(url.trim());
+      onImported(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setLoading(false);
+    }
+  }, [url, onImported]);
+
+  return (
+    <div className="rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-900/20 p-4 space-y-3">
+      <h3 className="text-sm font-semibold text-purple-700 dark:text-purple-300">
+        Import Skill from URL
+      </h3>
+      <p className="text-xs text-gray-500 dark:text-gray-400">
+        Paste a URL to a skill repository (GitHub, ClaHub, etc.) or documentation page.
+        The AI agent will fetch, analyze, and extract the skill definition automatically.
+      </p>
+
+      {error && (
+        <div className="text-xs text-red-500 bg-red-50 dark:bg-red-900/20 rounded p-2">
+          {error}
+        </div>
+      )}
+
+      <div className="flex gap-2">
+        <input
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="https://github.com/user/skill-repo"
+          className="flex-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm"
+          onKeyDown={(e) => e.key === "Enter" && handleImport()}
+          disabled={loading}
+        />
+        <button
+          onClick={handleImport}
+          disabled={!url.trim() || loading}
+          className="rounded-lg bg-purple-500 hover:bg-purple-600 disabled:bg-gray-300 dark:disabled:bg-gray-600 text-white px-4 py-2 text-sm font-medium transition-colors shrink-0"
+        >
+          {loading ? (
+            <span className="flex items-center gap-2">
+              <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              Analyzing...
+            </span>
+          ) : (
+            "Import"
+          )}
+        </button>
+      </div>
+
+      {loading && (
+        <p className="text-xs text-purple-500 dark:text-purple-400 animate-pulse">
+          Agent is fetching and analyzing the URL... This may take a moment.
+        </p>
+      )}
     </div>
   );
 }

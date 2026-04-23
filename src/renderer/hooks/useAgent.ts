@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect } from "react";
 import { useConversationStore } from "../stores/conversation-store";
+import { usePetStore } from "../stores/pet-store";
 
 export function useAgent() {
   const store = useConversationStore();
@@ -36,13 +37,11 @@ export function useAgent() {
 
     cleanups.push(
       window.catclaw.onDone(() => {
-        // Finalize: move streaming text to a message
-        const streamText = useConversationStore.getState().streamingText;
-        const toolCalls = useConversationStore.getState().activeToolCalls;
         const convId = useConversationStore.getState().activeConversationId;
 
         if (convId) {
-          // Reload messages from store to get the persisted version
+          // Load persisted messages FIRST, then clear streaming state
+          // This prevents a visual gap where active work vanishes before final messages render
           window.catclaw.loadConversation(convId).then((messages) => {
             store.setMessages(
               messages.map((m) => ({
@@ -51,17 +50,26 @@ export function useAgent() {
                 content: m.content as never,
               }))
             );
+            // Clear streaming state AFTER messages are loaded so there's no flash
+            store.clearStream();
+            store.clearToolCalls();
+            store.setAgentRunning(false);
           });
 
           // Also refresh conversation list (title may have changed)
           window.catclaw.listConversations().then((convs) => {
             store.setConversations(convs);
           });
+        } else {
+          store.clearStream();
+          store.clearToolCalls();
+          store.setAgentRunning(false);
         }
 
-        store.clearStream();
-        store.clearToolCalls();
-        store.setAgentRunning(false);
+        // Refresh paw coins after conversation turn
+        window.catclaw.getPetStats().then((stats) => {
+          usePetStore.getState().setCoins(stats.pawCoins);
+        }).catch(() => { /* ignore */ });
       })
     );
 

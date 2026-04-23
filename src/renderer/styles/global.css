@@ -40,3 +40,78 @@
 .prose pre code {
   @apply bg-transparent p-0;
 }
+
+/* --- Pet Rarity Styles --- */
+
+/* Rarity gradient backgrounds */
+.rarity-common {
+  @apply bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800;
+}
+.rarity-uncommon {
+  @apply bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900/40 dark:to-emerald-900/40;
+}
+.rarity-rare {
+  @apply bg-gradient-to-br from-blue-50 to-cyan-100 dark:from-blue-900/40 dark:to-cyan-900/40;
+}
+.rarity-epic {
+  @apply bg-gradient-to-br from-purple-50 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40;
+}
+.rarity-legendary {
+  @apply bg-gradient-to-br from-amber-50 via-yellow-100 to-orange-100 dark:from-amber-900/40 dark:via-yellow-900/30 dark:to-orange-900/40;
+}
+
+/* Rarity border colors */
+.rarity-border-common {
+  @apply border-gray-300 dark:border-gray-600;
+}
+.rarity-border-uncommon {
+  @apply border-green-300 dark:border-green-600;
+}
+.rarity-border-rare {
+  @apply border-blue-300 dark:border-blue-600;
+}
+.rarity-border-epic {
+  @apply border-purple-400 dark:border-purple-500;
+}
+.rarity-border-legendary {
+  @apply border-amber-400 dark:border-amber-500;
+}
+
+/* Rarity text colors */
+.rarity-text-common {
+  @apply text-gray-600 dark:text-gray-400;
+}
+.rarity-text-uncommon {
+  @apply text-green-600 dark:text-green-400;
+}
+.rarity-text-rare {
+  @apply text-blue-600 dark:text-blue-400;
+}
+.rarity-text-epic {
+  @apply text-purple-600 dark:text-purple-400;
+}
+.rarity-text-legendary {
+  @apply text-amber-600 dark:text-amber-400;
+}
+
+/* Shimmer effect for legendary cards */
+.shimmer-bg {
+  background: linear-gradient(
+    110deg,
+    transparent 25%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 75%
+  );
+  background-size: 200% 100%;
+}
+
+/* Card flip perspective */
+.perspective {
+  perspective: 1000px;
+}
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+}

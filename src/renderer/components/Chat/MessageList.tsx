@@ -6,8 +6,31 @@ import remarkGfm from "remark-gfm";
 import { useConversationStore } from "../../stores/conversation-store";
 import MessageBubble from "./MessageBubble";
 import ToolCallCard from "./ToolCallCard";
+import CatClawLogo from "../common/CatClawLogo";
 
-export default function MessageList() {
+const SUGGESTIONS = [
+  {
+    icon: "\uD83D\uDCDD",
+    title: "Draft an email",
+    prompt: "Help me write a professional email to my team about the upcoming project deadline",
+  },
+  {
+    icon: "\uD83D\uDD0D",
+    title: "Research a topic",
+    prompt: "Research the latest trends in AI and summarize the key findings",
+  },
+  {
+    icon: "\uD83D\uDCBB",
+    title: "Write some code",
+    prompt: "Create a Python script that reads a CSV file and generates a summary report",
+  },
+];
+
+interface MessageListProps {
+  onSuggestionClick?: (text: string) => void;
+}
+
+export default function MessageList({ onSuggestionClick }: MessageListProps) {
   const messages = useConversationStore((s) => s.messages);
   const streamingText = useConversationStore((s) => s.streamingText);
   const activeToolCalls = useConversationStore((s) => s.activeToolCalls);
@@ -21,14 +44,46 @@ export default function MessageList() {
 
   if (messages.length === 0 && !isRunning) {
     return (
-      <div className="flex-1 flex items-center justify-center text-gray-400 dark:text-gray-500">
-        <div className="text-center">
-          <div className="text-4xl mb-4">&#128049;</div>
-          <p className="text-lg font-medium">CatClaw</p>
-          <p className="text-sm mt-1">Your Mac AI Assistant</p>
-          <p className="text-xs mt-3 text-gray-300 dark:text-gray-600">
-            Send a message to get started
-          </p>
+      <div className="flex-1 flex flex-col items-center justify-center px-8">
+        {/* Logo */}
+        <CatClawLogo size={80} animated />
+
+        {/* Brand name */}
+        <h1 className="mt-5 text-3xl font-bold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+          CatClaw
+        </h1>
+
+        {/* Tagline */}
+        <p className="mt-2 text-sm text-gray-400 dark:text-gray-500">
+          Your Mac AI Companion
+        </p>
+
+        {/* Suggestion Cards */}
+        <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-2xl">
+          {SUGGESTIONS.map((s, i) => (
+            <button
+              key={i}
+              onClick={() => onSuggestionClick?.(s.prompt)}
+              className="group rounded-2xl border border-gray-200 dark:border-gray-700
+                         bg-white dark:bg-gray-800 p-5 text-left
+                         hover:border-indigo-300 dark:hover:border-indigo-600
+                         hover:shadow-lg hover:shadow-indigo-500/10
+                         transition-all duration-200"
+            >
+              <span className="text-2xl">{s.icon}</span>
+              <p className="mt-3 text-sm font-semibold text-gray-700 dark:text-gray-200">
+                {s.title}
+              </p>
+              <p className="mt-1 text-xs text-gray-400 dark:text-gray-500 line-clamp-2">
+                {s.prompt}
+              </p>
+              <div className="mt-3 flex justify-end">
+                <span className="text-gray-300 dark:text-gray-600 group-hover:text-indigo-400 transition-colors text-xs">
+                  &#8599;
+                </span>
+              </div>
+            </button>
+          ))}
         </div>
       </div>
     );
@@ -68,22 +123,11 @@ export default function MessageList() {
           );
         })}
 
-        {/* Active agent work: streaming text + tool calls */}
+        {/* Active agent work: tool calls + streaming text */}
         {isRunning && (streamingText || activeToolCalls.length > 0) && (
           <div className="flex justify-start mb-4">
             <div className="max-w-[85%] w-full space-y-2">
-              {/* Streaming text */}
-              {streamingText && (
-                <div className="rounded-2xl px-4 py-3 bg-gray-100 dark:bg-gray-800">
-                  <div className="prose prose-sm dark:prose-invert max-w-none">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {streamingText}
-                    </ReactMarkdown>
-                  </div>
-                </div>
-              )}
-
-              {/* Active tool calls */}
+              {/* Active tool calls (shown ABOVE streaming text to match final ThinkingStep order) */}
               {activeToolCalls.map((tc) => (
                 <ToolCallCard
                   key={tc.id}
@@ -93,6 +137,17 @@ export default function MessageList() {
                   status={tc.status}
                 />
               ))}
+
+              {/* Streaming text (final response renders below tool calls) */}
+              {streamingText && (
+                <div className="rounded-2xl px-4 py-3 bg-gray-100 dark:bg-gray-800">
+                  <div className="prose prose-sm dark:prose-invert max-w-none">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {streamingText}
+                    </ReactMarkdown>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
