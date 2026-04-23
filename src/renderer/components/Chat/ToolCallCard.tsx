@@ -17,8 +17,6 @@ export default function ToolCallCard({
 }: ToolCallCardProps) {
   const [expanded, setExpanded] = useState(false);
 
-  const statusIcon =
-    status === "running" ? "..." : status === "done" ? "done" : "error";
   const statusColor =
     status === "running"
       ? "text-yellow-500"
@@ -56,7 +54,7 @@ export default function ToolCallCard({
       {expanded && (
         <div className="border-t border-gray-200 dark:border-gray-700 px-3 py-2 space-y-2">
           <div>
-            <div className="text-xs font-semibold text-gray-500 mb-1">Input</div>
+            <div className="text-xs font-semibold text-gray-500 mb-1">输入</div>
             <pre className="text-xs text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 rounded p-2 overflow-x-auto whitespace-pre-wrap">
               {JSON.stringify(input, null, 2)}
             </pre>
@@ -64,7 +62,7 @@ export default function ToolCallCard({
           {result && (
             <div>
               <div className="text-xs font-semibold text-gray-500 mb-1">
-                Result {result.isError && "(Error)"}
+                结果 {result.isError && "（错误）"}
               </div>
               <div className="text-xs bg-gray-50 dark:bg-gray-800 rounded p-2 overflow-x-auto">
                 {renderResultContent(result.content)}
@@ -106,7 +104,7 @@ function renderResultContent(content: unknown[]): React.ReactNode {
             className="whitespace-pre-wrap text-gray-700 dark:text-gray-300"
           >
             {obj.text.length > 2000
-              ? obj.text.slice(0, 2000) + "\n... (truncated)"
+              ? obj.text.slice(0, 2000) + "\n... (已截断)"
               : obj.text}
           </pre>
         );
@@ -116,7 +114,7 @@ function renderResultContent(content: unknown[]): React.ReactNode {
           <img
             key={i}
             src={`data:${obj.mimeType || "image/png"};base64,${obj.data}`}
-            alt="Tool result"
+            alt="工具结果"
             className="max-w-full max-h-64 rounded"
           />
         );

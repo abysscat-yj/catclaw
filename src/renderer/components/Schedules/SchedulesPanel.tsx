@@ -36,7 +36,7 @@ export default function SchedulesPanel() {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center text-gray-400">
-        Loading...
+        加载中...
       </div>
     );
   }
@@ -45,16 +45,16 @@ export default function SchedulesPanel() {
     <div className="flex-1 flex flex-col min-h-0">
       <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold">Scheduled Tasks</h2>
+          <h2 className="text-lg font-semibold">定时任务</h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            {tasks.length} task{tasks.length !== 1 ? "s" : ""}
+            {tasks.length} 个任务
           </p>
         </div>
         <button
           onClick={() => setShowCreate(!showCreate)}
           className="rounded-lg bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 text-sm font-medium transition-colors"
         >
-          {showCreate ? "Cancel" : "+ New Task"}
+          {showCreate ? "取消" : "+ 新建任务"}
         </button>
       </div>
 
@@ -71,9 +71,9 @@ export default function SchedulesPanel() {
         {tasks.length === 0 && !showCreate ? (
           <div className="text-center text-gray-400 py-12">
             <div className="text-3xl mb-3">{"\u23F0"}</div>
-            <p className="text-sm">No scheduled tasks</p>
+            <p className="text-sm">暂无定时任务</p>
             <p className="text-xs mt-1">
-              Create a task to run automatically on a schedule
+              创建一个按计划自动执行的任务
             </p>
           </div>
         ) : (
@@ -124,7 +124,7 @@ function TaskCard({
                   : "bg-gray-100 dark:bg-gray-700 text-gray-500"
               }`}
             >
-              {task.enabled ? "Enabled" : "Disabled"}
+              {task.enabled ? "已启用" : "已禁用"}
             </button>
           </div>
         </div>
@@ -139,7 +139,7 @@ function TaskCard({
 
         {task.lastRunAt && (
           <div className="mt-1.5 text-xs text-gray-400">
-            Last run: {new Date(task.lastRunAt).toLocaleString()}
+            上次运行: {new Date(task.lastRunAt).toLocaleString()}
           </div>
         )}
 
@@ -148,13 +148,13 @@ function TaskCard({
             onClick={() => setEditing(!editing)}
             className="text-xs text-blue-500 hover:text-blue-700"
           >
-            {editing ? "Cancel" : "Edit"}
+            {editing ? "取消" : "编辑"}
           </button>
           <button
             onClick={() => onDelete(task.id)}
             className="text-xs text-red-500 hover:text-red-700"
           >
-            Delete
+            删除
           </button>
         </div>
       </div>
@@ -175,11 +175,11 @@ function TaskCard({
 // --- Create Form ---
 
 const CRON_PRESETS = [
-  { label: "Every hour", value: "0 * * * *" },
-  { label: "Every day 9am", value: "0 9 * * *" },
-  { label: "Every day 6pm", value: "0 18 * * *" },
-  { label: "Weekdays 9am", value: "0 9 * * 1-5" },
-  { label: "Every Sunday", value: "0 10 * * 0" },
+  { label: "每小时", value: "0 * * * *" },
+  { label: "每天 9 点", value: "0 9 * * *" },
+  { label: "每天 18 点", value: "0 18 * * *" },
+  { label: "工作日 9 点", value: "0 9 * * 1-5" },
+  { label: "每周日", value: "0 10 * * 0" },
 ];
 
 function CreateTaskForm({ onCreated }: { onCreated: () => void }) {
@@ -203,33 +203,33 @@ function CreateTaskForm({ onCreated }: { onCreated: () => void }) {
   return (
     <div className="rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-4 space-y-3">
       <h3 className="text-sm font-semibold text-blue-700 dark:text-blue-300">
-        New Scheduled Task
+        新建定时任务
       </h3>
 
       <div>
-        <label className="block text-xs font-medium mb-1">Name</label>
+        <label className="block text-xs font-medium mb-1">名称</label>
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="e.g. Daily code review"
+          placeholder="例如 每日代码审查"
           className="w-full rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 py-1.5 text-sm"
         />
       </div>
 
       <div>
-        <label className="block text-xs font-medium mb-1">Prompt</label>
+        <label className="block text-xs font-medium mb-1">提示词</label>
         <textarea
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           rows={3}
-          placeholder="What should the agent do?"
+          placeholder="Agent 应该做什么？"
           className="w-full rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 py-1.5 text-sm resize-y"
         />
       </div>
 
       <div>
         <label className="block text-xs font-medium mb-1">
-          Cron Schedule
+          Cron 表达式
         </label>
         <div className="flex gap-2 mb-1.5 flex-wrap">
           {CRON_PRESETS.map((p) => (
@@ -249,11 +249,11 @@ function CreateTaskForm({ onCreated }: { onCreated: () => void }) {
         <input
           value={cron}
           onChange={(e) => setCron(e.target.value)}
-          placeholder="M H D Mon DOW"
+          placeholder="分 时 日 月 周"
           className="w-full rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 py-1.5 text-sm font-mono"
         />
         <p className="text-[10px] text-gray-400 mt-0.5">
-          Format: minute hour day-of-month month day-of-week
+          格式: 分钟 小时 日 月 星期
         </p>
       </div>
 
@@ -263,7 +263,7 @@ function CreateTaskForm({ onCreated }: { onCreated: () => void }) {
           disabled={!name.trim() || !prompt.trim() || saving}
           className="rounded bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white px-3 py-1.5 text-sm font-medium transition-colors"
         >
-          {saving ? "Creating..." : "Create"}
+          {saving ? "创建中..." : "创建"}
         </button>
       </div>
     </div>
@@ -298,7 +298,7 @@ function EditTaskForm({
   return (
     <div className="border-t border-gray-200 dark:border-gray-700 px-4 py-3 space-y-3 bg-gray-50 dark:bg-gray-800/50">
       <div>
-        <label className="block text-xs font-medium mb-1">Name</label>
+        <label className="block text-xs font-medium mb-1">名称</label>
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -306,7 +306,7 @@ function EditTaskForm({
         />
       </div>
       <div>
-        <label className="block text-xs font-medium mb-1">Prompt</label>
+        <label className="block text-xs font-medium mb-1">提示词</label>
         <textarea
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
@@ -328,7 +328,7 @@ function EditTaskForm({
           disabled={saving}
           className="rounded bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white px-3 py-1.5 text-sm font-medium transition-colors"
         >
-          {saving ? "Saving..." : "Save"}
+          {saving ? "保存中..." : "保存"}
         </button>
       </div>
     </div>

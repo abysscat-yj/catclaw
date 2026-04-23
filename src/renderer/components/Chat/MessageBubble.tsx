@@ -65,7 +65,7 @@ export default function MessageBubble({ role, content }: MessageBubbleProps) {
                 <img
                   key={j}
                   src={`data:${img.mimeType || "image/png"};base64,${img.data}`}
-                  alt="Image"
+                  alt="图片"
                   className="max-w-full rounded-lg mt-2"
                 />
               ))}

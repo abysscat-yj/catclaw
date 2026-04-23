@@ -122,7 +122,7 @@ function InlineToolCall({
           {resultTexts && (
             <pre className="text-[11px] text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 rounded p-2 overflow-x-auto whitespace-pre-wrap max-h-48 overflow-y-auto">
               {resultTexts.length > 2000
-                ? resultTexts.slice(0, 2000) + "\n... (truncated)"
+                ? resultTexts.slice(0, 2000) + "\n... (已截断)"
                 : resultTexts}
             </pre>
           )}
@@ -133,7 +133,7 @@ function InlineToolCall({
               <img
                 key={idx}
                 src={`data:${c.mimeType || "image/png"};base64,${c.data}`}
-                alt="Tool result"
+                alt="工具结果"
                 className="max-w-full max-h-48 rounded"
               />
             ))}
@@ -150,7 +150,7 @@ function summarizeInput(
   if (name === "exec" && input.command) return String(input.command);
   if (name === "filesystem" && input.action && input.path)
     return `${input.action}: ${input.path}`;
-  if (name === "screenshot") return "capture screen";
+  if (name === "screenshot") return "截取屏幕";
   if (name === "web_fetch" && input.url) return String(input.url);
   if (name === "web_search" && input.query) return String(input.query);
 

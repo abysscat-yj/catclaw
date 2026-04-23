@@ -10,6 +10,12 @@ declare const MAIN_WINDOW_VITE_NAME: string;
 
 let mainWindow: BrowserWindow | null = null;
 
+function getAppIcon(): string {
+  return app.isPackaged
+    ? path.join(process.resourcesPath, "catclaw-icon.png")
+    : path.join(app.getAppPath(), "assets", "catclaw-icon.png");
+}
+
 function createWindow(): void {
   mainWindow = new BrowserWindow({
     width: 1100,
@@ -42,6 +48,10 @@ function createWindow(): void {
 }
 
 app.whenReady().then(() => {
+  if (process.platform === "darwin") {
+    app.dock.setIcon(getAppIcon());
+  }
+
   createWindow();
 
   app.on("activate", () => {

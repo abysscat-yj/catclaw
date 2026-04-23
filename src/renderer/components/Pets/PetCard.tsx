@@ -97,7 +97,7 @@ export default function BuddyCard({ buddy, isNew, onClick, selected }: BuddyCard
           <span
             onDoubleClick={handleDoubleClick}
             className="text-sm font-bold text-gray-800 dark:text-gray-100 truncate cursor-text"
-            title="Double-click to rename"
+            title="双击可重命名"
           >
             {buddy.name}
           </span>

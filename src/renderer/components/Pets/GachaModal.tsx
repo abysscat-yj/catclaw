@@ -12,11 +12,11 @@ interface GachaModalProps {
 const DRAW_COST = 10;
 
 const RARITY_CELEBRATION: Record<string, { text: string; color: string }> = {
-  common: { text: "A new friend!", color: "text-gray-600 dark:text-gray-400" },
-  uncommon: { text: "Uncommon Find!", color: "text-green-500" },
-  rare: { text: "Rare Discovery!", color: "text-blue-500" },
-  epic: { text: "EPIC!!!", color: "text-purple-500" },
-  legendary: { text: "LEGENDARY!!!", color: "text-amber-500 animate-pulse" },
+  common: { text: "新伙伴！", color: "text-gray-600 dark:text-gray-400" },
+  uncommon: { text: "不常见的发现！", color: "text-green-500" },
+  rare: { text: "稀有发现！", color: "text-blue-500" },
+  epic: { text: "史诗级！！！", color: "text-purple-500" },
+  legendary: { text: "传说级！！！", color: "text-amber-500 animate-pulse" },
 };
 
 type DrawState = "idle" | "drawing" | "revealed";
@@ -67,26 +67,26 @@ export default function GachaModal({ onClose, pawCoins, onDraw }: GachaModalProp
           <div className="text-center">
             <div className="text-6xl mb-4 animate-float">{"\uD83D\uDC3E"}</div>
             <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">
-              Draw a Buddy!
+              抽取伙伴！
             </h2>
             <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-              Spend {DRAW_COST} paw coins to summon a random companion
+              花费 {DRAW_COST} 个爪爪币召唤一个随机伙伴
             </p>
 
             {/* Rarity rates */}
             <div className="mt-4 flex flex-wrap justify-center gap-2 text-xs">
-              <span className="rarity-text-common">Common 60%</span>
-              <span className="rarity-text-uncommon">Uncommon 25%</span>
-              <span className="rarity-text-rare">Rare 10%</span>
-              <span className="rarity-text-epic">Epic 4%</span>
-              <span className="rarity-text-legendary">Legendary 1%</span>
+              <span className="rarity-text-common">普通 60%</span>
+              <span className="rarity-text-uncommon">不常见 25%</span>
+              <span className="rarity-text-rare">稀有 10%</span>
+              <span className="rarity-text-epic">史诗 4%</span>
+              <span className="rarity-text-legendary">传说 1%</span>
             </div>
 
             {/* Coin balance */}
             <div className="mt-5 flex items-center justify-center gap-1.5">
               <span>{"\uD83E\uDE99"}</span>
               <span className="text-sm font-semibold text-amber-700 dark:text-amber-300">
-                {coins} paw coins
+                {coins} 个爪爪币
               </span>
             </div>
 
@@ -97,8 +97,8 @@ export default function GachaModal({ onClose, pawCoins, onDraw }: GachaModalProp
               className="mt-5 w-full rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 disabled:from-gray-300 disabled:to-gray-400 dark:disabled:from-gray-600 dark:disabled:to-gray-700 text-white px-6 py-3 text-sm font-bold transition-all shadow-md hover:shadow-lg disabled:shadow-none disabled:cursor-not-allowed"
             >
               {coins < DRAW_COST
-                ? `Need ${DRAW_COST - coins} more coins`
-                : `Draw (${DRAW_COST} coins)`}
+                ? `还差 ${DRAW_COST - coins} 个爪爪币`
+                : `抽取（${DRAW_COST} 爪爪币）`}
             </button>
           </div>
         )}
@@ -112,7 +112,7 @@ export default function GachaModal({ onClose, pawCoins, onDraw }: GachaModalProp
               </div>
             </div>
             <p className="mt-4 text-sm text-gray-400 dark:text-gray-500 animate-pulse">
-              Summoning a new companion...
+              正在召唤新伙伴...
             </p>
           </div>
         )}
@@ -123,7 +123,7 @@ export default function GachaModal({ onClose, pawCoins, onDraw }: GachaModalProp
             {/* Shiny callout */}
             {result.buddy.isShiny && (
               <p className="text-sm font-bold text-pink-500 mb-1 animate-pulse">
-                &#10024; SHINY! &#10024;
+                &#10024; 闪光！ &#10024;
               </p>
             )}
 
@@ -141,7 +141,7 @@ export default function GachaModal({ onClose, pawCoins, onDraw }: GachaModalProp
             <div className="mt-4 flex items-center justify-center gap-1.5">
               <span>{"\uD83E\uDE99"}</span>
               <span className="text-sm font-semibold text-amber-700 dark:text-amber-300">
-                {coins} paw coins remaining
+                剩余 {coins} 个爪爪币
               </span>
             </div>
 
@@ -152,14 +152,14 @@ export default function GachaModal({ onClose, pawCoins, onDraw }: GachaModalProp
                   onClick={handleDrawAgain}
                   className="flex-1 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white px-4 py-2.5 text-sm font-medium transition-all"
                 >
-                  Draw Again
+                  再抽一次
                 </button>
               )}
               <button
                 onClick={onClose}
                 className={`${coins >= DRAW_COST ? "flex-1" : "w-full"} rounded-xl border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 px-4 py-2.5 text-sm font-medium transition-all`}
               >
-                Awesome!
+                太棒了！
               </button>
             </div>
           </div>

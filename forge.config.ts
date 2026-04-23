@@ -8,6 +8,7 @@ const config: ForgeConfig = {
     appBundleId: "com.catclaw.app",
     icon: "./assets/icon",
     asar: true,
+    extraResource: ["./assets/catclaw-icon.png"],
   },
   makers: [
     {
@@ -18,6 +19,8 @@ const config: ForgeConfig = {
       name: "@electron-forge/maker-dmg",
       config: {
         name: "CatClaw",
+        icon: "./assets/icon.icns",
+        format: "ULFO",
       },
     },
   ],

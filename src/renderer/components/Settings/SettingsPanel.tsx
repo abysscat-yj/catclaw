@@ -62,7 +62,7 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg mx-4 max-h-[80vh] overflow-y-auto">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-lg font-semibold">Settings</h2>
+          <h2 className="text-lg font-semibold">设置</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-xl"
@@ -74,7 +74,7 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
         <div className="px-6 py-4 space-y-6">
           {/* Provider selector */}
           <div>
-            <label className="block text-sm font-medium mb-1">Provider</label>
+            <label className="block text-sm font-medium mb-1">服务商</label>
             <div className="flex gap-2">
               <select
                 value={activeProviderId}
@@ -84,7 +84,7 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
                 {providers.map((p) => (
                   <option key={p.id} value={p.id}>
                     {p.name}
-                    {p.hasApiKey ? "" : " (No Key)"}
+                    {p.hasApiKey ? "" : " (未配置)"}
                   </option>
                 ))}
               </select>
@@ -92,7 +92,7 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
                 onClick={() => setShowAddProvider(!showAddProvider)}
                 className="rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 text-sm transition-colors"
               >
-                {showAddProvider ? "Cancel" : "+ Custom"}
+                {showAddProvider ? "取消" : "+ 自定义"}
               </button>
             </div>
           </div>
@@ -126,7 +126,7 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
           {/* Model selector */}
           {activeProvider && (
             <div>
-              <label className="block text-sm font-medium mb-1">Model</label>
+              <label className="block text-sm font-medium mb-1">模型</label>
               <select
                 value={model}
                 onChange={handleModelChange}
@@ -144,7 +144,7 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
           {/* Max Tokens */}
           <div>
             <label className="block text-sm font-medium mb-1">
-              Max Tokens
+              最大 Tokens
             </label>
             <input
               type="number"
@@ -159,13 +159,13 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
           {/* Custom System Prompt */}
           <div>
             <label className="block text-sm font-medium mb-1">
-              Custom System Prompt (optional)
+              自定义系统提示词（可选）
             </label>
             <textarea
               value={customSystemPrompt}
               onChange={handleSystemPromptChange}
               rows={4}
-              placeholder="Additional instructions for the AI..."
+              placeholder="为 AI 添加额外指令..."
               className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
             />
           </div>
@@ -176,7 +176,7 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
             onClick={onClose}
             className="rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 px-4 py-2 text-sm font-medium transition-colors"
           >
-            Done
+            完成
           </button>
         </div>
       </div>
@@ -209,11 +209,11 @@ function ProviderKeyForm({
   return (
     <div>
       <label className="block text-sm font-medium mb-1">
-        {provider.name} API Key
+        {provider.name} API 密钥
       </label>
       {provider.hasApiKey && (
         <p className="text-xs text-green-600 dark:text-green-400 mb-2">
-          Key configured: {provider.apiKey}
+          已配置密钥: {provider.apiKey}
         </p>
       )}
       <div className="flex gap-2">
@@ -223,8 +223,8 @@ function ProviderKeyForm({
           onChange={(e) => setNewKey(e.target.value)}
           placeholder={
             provider.hasApiKey
-              ? "Enter new key to replace"
-              : "Enter API key..."
+              ? "输入新密钥以替换"
+              : "输入 API 密钥..."
           }
           className="flex-1 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
@@ -233,7 +233,7 @@ function ProviderKeyForm({
           disabled={!newKey.trim() || saving}
           className="rounded-lg bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 dark:disabled:bg-gray-600 text-white px-4 py-2 text-sm font-medium transition-colors"
         >
-          {saving ? "..." : "Save"}
+          {saving ? "..." : "保存"}
         </button>
       </div>
     </div>
@@ -311,10 +311,10 @@ function EditProviderForm({
 
   return (
     <div className="rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 p-4 space-y-3">
-      <h3 className="text-sm font-semibold">Provider Settings</h3>
+      <h3 className="text-sm font-semibold">服务商设置</h3>
 
       <div>
-        <label className="block text-xs font-medium mb-1">Base URL</label>
+        <label className="block text-xs font-medium mb-1">接口地址</label>
         <input
           value={baseUrl}
           onChange={handleBaseUrlChange}
@@ -324,19 +324,19 @@ function EditProviderForm({
 
       <div>
         <label className="block text-xs font-medium mb-1">
-          Models (comma-separated)
+          模型（逗号分隔）
         </label>
         <input
           value={models}
           onChange={handleModelsChange}
-          placeholder="e.g. glm-5, ernie-4.0"
+          placeholder="例如 glm-5, ernie-4.0"
           className="w-full rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 py-1.5 text-sm"
         />
       </div>
 
       <div>
         <label className="block text-xs font-medium mb-1">
-          Custom Headers (one per line: Key: Value)
+          自定义请求头（每行一个: Key: Value）
         </label>
         <textarea
           value={headers}
@@ -352,7 +352,7 @@ function EditProviderForm({
           onClick={onRemove}
           className="text-xs text-red-500 hover:text-red-700"
         >
-          Remove provider
+          删除服务商
         </button>
         {dirty && (
           <button
@@ -360,7 +360,7 @@ function EditProviderForm({
             disabled={saving}
             className="rounded bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white px-3 py-1.5 text-sm font-medium transition-colors"
           >
-            {saving ? "Saving..." : "Save Changes"}
+            {saving ? "保存中..." : "保存修改"}
           </button>
         )}
       </div>
@@ -431,21 +431,21 @@ function AddProviderForm({
   return (
     <div className="rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-4 space-y-3">
       <h3 className="text-sm font-semibold text-blue-700 dark:text-blue-300">
-        Add Custom Provider
+        添加自定义服务商
       </h3>
 
       <div>
-        <label className="block text-xs font-medium mb-1">Name</label>
+        <label className="block text-xs font-medium mb-1">名称</label>
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="e.g. Baidu Qianfan"
+          placeholder="例如 百度千帆"
           className="w-full rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 py-1.5 text-sm"
         />
       </div>
 
       <div>
-        <label className="block text-xs font-medium mb-1">Type</label>
+        <label className="block text-xs font-medium mb-1">类型</label>
         <select
           value={type}
           onChange={(e) =>
@@ -453,47 +453,47 @@ function AddProviderForm({
           }
           className="w-full rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 py-1.5 text-sm"
         >
-          <option value="openai-compatible">OpenAI Compatible</option>
+          <option value="openai-compatible">OpenAI 兼容</option>
           <option value="anthropic">Anthropic</option>
         </select>
       </div>
 
       <div>
-        <label className="block text-xs font-medium mb-1">Base URL</label>
+        <label className="block text-xs font-medium mb-1">接口地址</label>
         <input
           value={baseUrl}
           onChange={(e) => setBaseUrl(e.target.value)}
-          placeholder="e.g. http://qianfan.baidubce.com/v2"
+          placeholder="例如 http://qianfan.baidubce.com/v2"
           className="w-full rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 py-1.5 text-sm"
         />
       </div>
 
       <div>
-        <label className="block text-xs font-medium mb-1">API Key</label>
+        <label className="block text-xs font-medium mb-1">API 密钥</label>
         <input
           type="password"
           value={apiKey}
           onChange={(e) => setApiKey(e.target.value)}
-          placeholder="Bearer token or API key"
+          placeholder="Bearer Token 或 API 密钥"
           className="w-full rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 py-1.5 text-sm"
         />
       </div>
 
       <div>
         <label className="block text-xs font-medium mb-1">
-          Models (comma-separated)
+          模型（逗号分隔）
         </label>
         <input
           value={models}
           onChange={(e) => setModels(e.target.value)}
-          placeholder="e.g. glm-5, ernie-4.0"
+          placeholder="例如 glm-5, ernie-4.0"
           className="w-full rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 py-1.5 text-sm"
         />
       </div>
 
       <div>
         <label className="block text-xs font-medium mb-1">
-          Custom Headers (optional, one per line: Key: Value)
+          自定义请求头（可选，每行一个: Key: Value）
         </label>
         <textarea
           value={headers}
@@ -509,14 +509,14 @@ function AddProviderForm({
           onClick={onAdd}
           className="rounded px-3 py-1.5 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
         >
-          Cancel
+          取消
         </button>
         <button
           onClick={handleAdd}
           disabled={!name.trim() || !baseUrl.trim() || saving}
           className="rounded bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white px-3 py-1.5 text-sm font-medium transition-colors"
         >
-          {saving ? "Adding..." : "Add Provider"}
+          {saving ? "添加中..." : "添加服务商"}
         </button>
       </div>
     </div>

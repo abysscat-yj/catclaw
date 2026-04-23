@@ -128,11 +128,11 @@ export interface RarityConfig {
 }
 
 export const RARITIES: Record<string, RarityConfig> = {
-  legendary: { name: "Legendary", stars: 5, color: "#f59e0b", bgClass: "rarity-legendary", borderClass: "rarity-border-legendary", textClass: "rarity-text-legendary" },
-  epic: { name: "Epic", stars: 4, color: "#a855f7", bgClass: "rarity-epic", borderClass: "rarity-border-epic", textClass: "rarity-text-epic" },
-  rare: { name: "Rare", stars: 3, color: "#3b82f6", bgClass: "rarity-rare", borderClass: "rarity-border-rare", textClass: "rarity-text-rare" },
-  uncommon: { name: "Uncommon", stars: 2, color: "#22c55e", bgClass: "rarity-uncommon", borderClass: "rarity-border-uncommon", textClass: "rarity-text-uncommon" },
-  common: { name: "Common", stars: 1, color: "#6b7280", bgClass: "rarity-common", borderClass: "rarity-border-common", textClass: "rarity-text-common" },
+  legendary: { name: "传说", stars: 5, color: "#f59e0b", bgClass: "rarity-legendary", borderClass: "rarity-border-legendary", textClass: "rarity-text-legendary" },
+  epic: { name: "史诗", stars: 4, color: "#a855f7", bgClass: "rarity-epic", borderClass: "rarity-border-epic", textClass: "rarity-text-epic" },
+  rare: { name: "稀有", stars: 3, color: "#3b82f6", bgClass: "rarity-rare", borderClass: "rarity-border-rare", textClass: "rarity-text-rare" },
+  uncommon: { name: "不常见", stars: 2, color: "#22c55e", bgClass: "rarity-uncommon", borderClass: "rarity-border-uncommon", textClass: "rarity-text-uncommon" },
+  common: { name: "普通", stars: 1, color: "#6b7280", bgClass: "rarity-common", borderClass: "rarity-border-common", textClass: "rarity-text-common" },
 };
 
 export function getSpeciesById(id: string): Species | undefined {
@@ -150,11 +150,11 @@ export function renderStars(count: number): string {
 // --- Personality system ---
 
 export const PERSONALITY_TITLES: Record<string, string[]> = {
-  debugging: ["Bug Hunter", "Code Detective", "Debug Master", "Lint Lord"],
-  patience: ["Zen Master", "Calm Soul", "Patient One", "Chill Vibes"],
-  chaos: ["Chaos Gremlin", "Wild Card", "Entropy Agent", "Mayhem Buddy"],
-  wisdom: ["Wise Sage", "Knowledge Keeper", "Deep Thinker", "Oracle"],
-  snark: ["Sassy One", "Shade Thrower", "Witty Pal", "Roast Master"],
+  debugging: ["漏洞猎手", "代码侦探", "调试大师", "Lint 之王"],
+  patience: ["禅意大师", "平静灵魂", "耐心担当", "淡定选手"],
+  chaos: ["混乱精灵", "野路子选手", "熵增特工", "搞事伙伴"],
+  wisdom: ["智慧贤者", "知识守护者", "深度思考者", "神谕者"],
+  snark: ["毒舌担当", "阴阳大师", "机智搭子", "吐槽王"],
 };
 
 export function getPersonalityTitle(attrs: BuddyAttributes): string {
@@ -171,11 +171,11 @@ export function getTopAttributeName(attrs: BuddyAttributes): string {
   const entries = Object.entries(attrs) as [string, number][];
   entries.sort((a, b) => b[1] - a[1]);
   const labels: Record<string, string> = {
-    debugging: "Debugging",
-    patience: "Patience",
-    chaos: "Chaos",
-    wisdom: "Wisdom",
-    snark: "Snark",
+    debugging: "调试",
+    patience: "耐心",
+    chaos: "混乱",
+    wisdom: "智慧",
+    snark: "吐槽",
   };
   return labels[entries[0][0]] || entries[0][0];
 }

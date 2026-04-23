@@ -11,18 +11,18 @@ import CatClawLogo from "../common/CatClawLogo";
 const SUGGESTIONS = [
   {
     icon: "\uD83D\uDCDD",
-    title: "Draft an email",
-    prompt: "Help me write a professional email to my team about the upcoming project deadline",
+    title: "起草邮件",
+    prompt: "帮我给团队写一封关于即将到来的项目截止日期的专业邮件",
   },
   {
     icon: "\uD83D\uDD0D",
-    title: "Research a topic",
-    prompt: "Research the latest trends in AI and summarize the key findings",
+    title: "调研一个主题",
+    prompt: "调研最新的 AI 趋势并总结关键发现",
   },
   {
     icon: "\uD83D\uDCBB",
-    title: "Write some code",
-    prompt: "Create a Python script that reads a CSV file and generates a summary report",
+    title: "写一段代码",
+    prompt: "创建一个 Python 脚本，读取 CSV 文件并生成汇总报告",
   },
 ];
 
@@ -55,7 +55,7 @@ export default function MessageList({ onSuggestionClick }: MessageListProps) {
 
         {/* Tagline */}
         <p className="mt-2 text-sm text-gray-400 dark:text-gray-500">
-          Your Mac AI Companion
+          你的 Mac AI 助手
         </p>
 
         {/* Suggestion Cards */}
@@ -127,18 +127,7 @@ export default function MessageList({ onSuggestionClick }: MessageListProps) {
         {isRunning && (streamingText || activeToolCalls.length > 0) && (
           <div className="flex justify-start mb-4">
             <div className="max-w-[85%] w-full space-y-2">
-              {/* Active tool calls (shown ABOVE streaming text to match final ThinkingStep order) */}
-              {activeToolCalls.map((tc) => (
-                <ToolCallCard
-                  key={tc.id}
-                  name={tc.name}
-                  input={tc.input}
-                  result={tc.result}
-                  status={tc.status}
-                />
-              ))}
-
-              {/* Streaming text (final response renders below tool calls) */}
+              {/* Streaming text (thinking/response shown first) */}
               {streamingText && (
                 <div className="rounded-2xl px-4 py-3 bg-gray-100 dark:bg-gray-800">
                   <div className="prose prose-sm dark:prose-invert max-w-none">
@@ -148,6 +137,17 @@ export default function MessageList({ onSuggestionClick }: MessageListProps) {
                   </div>
                 </div>
               )}
+
+              {/* Active tool calls (shown below streaming text) */}
+              {activeToolCalls.map((tc) => (
+                <ToolCallCard
+                  key={tc.id}
+                  name={tc.name}
+                  input={tc.input}
+                  result={tc.result}
+                  status={tc.status}
+                />
+              ))}
             </div>
           </div>
         )}

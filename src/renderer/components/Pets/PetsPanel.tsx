@@ -72,7 +72,7 @@ export default function PetsPanel() {
   if (!loaded) {
     return (
       <div className="flex-1 flex items-center justify-center text-gray-400">
-        Loading...
+        加载中...
       </div>
     );
   }
@@ -83,11 +83,11 @@ export default function PetsPanel() {
       <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-            Buddy Collection
+            伙伴收藏
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-            {buddies.length} {buddies.length === 1 ? "buddy" : "buddies"} collected
-            {shinyCount > 0 && <span className="ml-2">&#10024; {shinyCount} shiny</span>}
+            已收集 {buddies.length} 只伙伴
+            {shinyCount > 0 && <span className="ml-2">&#10024; {shinyCount} 闪光</span>}
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -101,7 +101,7 @@ export default function PetsPanel() {
             onClick={() => setShowGacha(true)}
             className="rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white px-4 py-2 text-sm font-medium transition-all shadow-md hover:shadow-lg"
           >
-            {"\uD83C\uDFB2"} Draw Buddy
+            {"\uD83C\uDFB2"} 抽取伙伴
           </button>
         </div>
       </div>
@@ -112,18 +112,18 @@ export default function PetsPanel() {
           <div className="text-center py-16">
             <div className="text-6xl mb-4">{"\uD83D\uDC3E"}</div>
             <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">
-              No buddies yet!
+              还没有伙伴！
             </h3>
             <p className="text-sm text-gray-400 mt-2">
-              Draw your first buddy to start your collection.
+              抽取你的第一只伙伴，开始收藏之旅。
               <br />
-              Each buddy has unique species, attributes, and rarity!
+              每只伙伴都有独特的种族、属性与稀有度！
             </p>
             <button
               onClick={() => setShowGacha(true)}
               className="mt-6 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white px-6 py-3 text-sm font-bold transition-all shadow-md hover:shadow-lg"
             >
-              {"\uD83C\uDFB2"} Draw Your First Buddy!
+              {"\uD83C\uDFB2"} 抽取你的第一只伙伴！
             </button>
           </div>
         ) : (
@@ -137,7 +137,7 @@ export default function PetsPanel() {
 
             {/* Active buddy hint */}
             <p className="text-xs text-gray-400 dark:text-gray-500 mb-3">
-              Click a buddy to set it as your active companion in the sidebar.
+              点击伙伴可将它设为侧边栏中的当前陪伴。
             </p>
 
             {/* Buddy grid */}

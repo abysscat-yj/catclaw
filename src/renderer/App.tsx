@@ -113,11 +113,11 @@ export default function App() {
 
   const viewTitle =
     activeView === "skills"
-      ? "Skills"
+      ? "技能"
       : activeView === "schedules"
-        ? "Scheduled Tasks"
+        ? "定时任务"
         : activeView === "pets"
-          ? "Pet Collection"
+          ? "伙伴收藏"
           : conversations.find((c) => c.id === activeId)?.title ?? "CatClaw";
 
   return (
@@ -138,24 +138,24 @@ export default function App() {
         <div className="p-2 space-y-0.5">
           <NavButton
             icon="+"
-            label="New Task"
+            label="新任务"
             onClick={handleNewConversation}
           />
           <NavButton
             icon={"\uD83D\uDD27"}
-            label="Skills"
+            label="技能"
             active={activeView === "skills"}
             onClick={() => setActiveView("skills")}
           />
           <NavButton
             icon={"\u23F0"}
-            label="Scheduled Tasks"
+            label="定时任务"
             active={activeView === "schedules"}
             onClick={() => setActiveView("schedules")}
           />
           <NavButton
             icon={"\uD83D\uDC3E"}
-            label="Pets"
+            label="伙伴"
             active={activeView === "pets"}
             onClick={() => setActiveView("pets")}
           />
@@ -164,13 +164,15 @@ export default function App() {
         {/* History section */}
         <div className="px-3 pt-2 pb-1">
           <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
-            History
+            历史记录
           </span>
         </div>
 
-        {/* Conversation list */}
+        {/* Conversation list - hide empty conversations that have no messages */}
         <div className="flex-1 overflow-y-auto px-2">
-          {conversations.map((conv) => (
+          {conversations
+            .filter((conv) => conv.title !== "New Chat" || conv.id === activeId)
+            .map((conv) => (
             <ConversationRow
               key={conv.id}
               conv={conv}
@@ -191,9 +193,9 @@ export default function App() {
             className="no-drag w-full rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700/50 px-3 py-2 text-sm text-left transition-colors flex items-center gap-2 text-gray-600 dark:text-gray-400"
           >
             <span>&#9881;</span>
-            <span>Settings</span>
+            <span>设置</span>
             {!hasApiKey && (
-              <span className="ml-auto text-xs text-red-500">No API Key</span>
+              <span className="ml-auto text-xs text-red-500">未配置 API Key</span>
             )}
           </button>
         </div>
@@ -203,9 +205,11 @@ export default function App() {
       <div className="flex-1 flex flex-col min-w-0">
         {/* Title bar drag region */}
         <div className="drag-region h-12 flex items-center px-4 border-b border-gray-200/50 dark:border-gray-700/50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
-          <span className="no-drag text-sm font-medium text-gray-600 dark:text-gray-300 truncate">
-            {viewTitle}
-          </span>
+          {activeView === "chat" && (
+            <span className="no-drag text-sm font-medium text-gray-600 dark:text-gray-300 truncate">
+              {viewTitle}
+            </span>
+          )}
         </div>
 
         {activeView === "chat" && <ChatView />}

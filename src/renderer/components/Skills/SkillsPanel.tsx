@@ -30,7 +30,7 @@ export default function SkillsPanel() {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center text-gray-400">
-        Loading skills...
+        加载技能中...
       </div>
     );
   }
@@ -42,9 +42,9 @@ export default function SkillsPanel() {
     <div className="flex-1 flex flex-col min-h-0">
       <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold">Skills</h2>
+          <h2 className="text-lg font-semibold">技能</h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            {customSkills.length} custom, {builtinSkills.length} built-in
+            {customSkills.length} 个自定义, {builtinSkills.length} 个内置
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -52,13 +52,13 @@ export default function SkillsPanel() {
             onClick={() => { setShowImport(!showImport); setShowCreate(false); setImportedData(null); }}
             className="rounded-lg border border-blue-300 dark:border-blue-700 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30 px-3 py-1.5 text-sm font-medium transition-colors"
           >
-            {showImport ? "Cancel" : "Import URL"}
+            {showImport ? "取消" : "导入链接"}
           </button>
           <button
             onClick={() => { setShowCreate(!showCreate); setShowImport(false); setImportedData(null); }}
             className="rounded-lg bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 text-sm font-medium transition-colors"
           >
-            {showCreate ? "Cancel" : "+ New Skill"}
+            {showCreate ? "取消" : "+ 新建技能"}
           </button>
         </div>
       </div>
@@ -88,7 +88,7 @@ export default function SkillsPanel() {
         {/* Custom Skills */}
         {customSkills.length > 0 && (
           <>
-            <SectionLabel label="Custom Skills" />
+            <SectionLabel label="自定义技能" />
             {customSkills.map((skill) => (
               <SkillCard
                 key={skill.id || skill.name}
@@ -103,9 +103,9 @@ export default function SkillsPanel() {
         {customSkills.length === 0 && !showCreate && (
           <div className="text-center text-gray-400 py-8">
             <div className="text-3xl mb-3">{"\uD83D\uDD27"}</div>
-            <p className="text-sm">No custom skills yet</p>
+            <p className="text-sm">暂无自定义技能</p>
             <p className="text-xs mt-1">
-              Create a prompt-template skill for the agent to use
+              创建一个提示词模板技能供 Agent 使用
             </p>
           </div>
         )}
@@ -113,7 +113,7 @@ export default function SkillsPanel() {
         {/* Built-in Tools */}
         {builtinSkills.length > 0 && (
           <>
-            <SectionLabel label="Built-in Tools" />
+            <SectionLabel label="内置工具" />
             {builtinSkills.map((skill) => (
               <BuiltinSkillCard key={skill.name} skill={skill} />
             ))}
@@ -167,7 +167,7 @@ function BuiltinSkillCard({ skill }: { skill: SkillDefinition }) {
               {skill.name}
             </span>
             <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
-              Built-in
+内置
             </span>
           </div>
           <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2">
@@ -182,7 +182,7 @@ function BuiltinSkillCard({ skill }: { skill: SkillDefinition }) {
       {expanded && (
         <div className="px-4 pb-3 border-t border-gray-100 dark:border-gray-700">
           <div className="text-xs font-semibold text-gray-500 mt-3 mb-2">
-            Parameters
+            参数
           </div>
           <div className="space-y-1.5">
             {Object.entries(props).map(([name, prop]) => (
@@ -191,7 +191,7 @@ function BuiltinSkillCard({ skill }: { skill: SkillDefinition }) {
                   {name}
                 </code>
                 {required.has(name) && (
-                  <span className="text-red-400 text-[10px]">required</span>
+                  <span className="text-red-400 text-[10px]">必填</span>
                 )}
                 {prop.type && (
                   <span className="text-gray-400">{prop.type}</span>
@@ -263,7 +263,7 @@ function SkillCard({
         {expanded && skill.promptTemplate && (
           <div className="mt-2 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-2">
             <div className="text-[10px] font-semibold text-gray-500 mb-1">
-              Prompt Template
+              提示词模板
             </div>
             <pre className="text-xs text-gray-600 dark:text-gray-300 whitespace-pre-wrap font-mono">
               {skill.promptTemplate}
@@ -276,13 +276,13 @@ function SkillCard({
             onClick={() => setEditing(!editing)}
             className="text-xs text-blue-500 hover:text-blue-700"
           >
-            {editing ? "Cancel" : "Edit"}
+            {editing ? "取消" : "编辑"}
           </button>
           <button
             onClick={() => skill.id && onDelete(skill.id)}
             className="text-xs text-red-500 hover:text-red-700"
           >
-            Delete
+            删除
           </button>
         </div>
       </div>
@@ -351,7 +351,7 @@ function CreateSkillForm({ onCreated, initialData }: { onCreated: () => void; in
   return (
     <div className="rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-4 space-y-3">
       <h3 className="text-sm font-semibold text-blue-700 dark:text-blue-300">
-        New Custom Skill
+        新建自定义技能
       </h3>
 
       {error && (
@@ -361,31 +361,31 @@ function CreateSkillForm({ onCreated, initialData }: { onCreated: () => void; in
       )}
 
       <div>
-        <label className="block text-xs font-medium mb-1">Name</label>
+        <label className="block text-xs font-medium mb-1">名称</label>
         <input
           value={name}
           onChange={(e) => setName(e.target.value.replace(/\s+/g, "_"))}
-          placeholder="e.g. code_review"
+          placeholder="例如 code_review"
           className="w-full rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 py-1.5 text-sm font-mono"
         />
         <p className="text-[10px] text-gray-400 mt-0.5">
-          Unique identifier (no spaces, used by agent to call this skill)
+          唯一标识符（不能有空格，Agent 通过此名称调用技能）
         </p>
       </div>
 
       <div>
-        <label className="block text-xs font-medium mb-1">Description</label>
+        <label className="block text-xs font-medium mb-1">描述</label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={2}
-          placeholder="What does this skill do?"
+          placeholder="这个技能做什么？"
           className="w-full rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 py-1.5 text-sm resize-y"
         />
       </div>
 
       <div>
-        <label className="block text-xs font-medium mb-1">Parameters</label>
+        <label className="block text-xs font-medium mb-1">参数</label>
         <div className="space-y-2">
           {parameters.map((param, idx) => (
             <ParameterRow
@@ -400,22 +400,22 @@ function CreateSkillForm({ onCreated, initialData }: { onCreated: () => void; in
           onClick={addParam}
           className="mt-2 text-xs text-blue-500 hover:text-blue-700"
         >
-          + Add Parameter
+          + 添加参数
         </button>
       </div>
 
       <div>
-        <label className="block text-xs font-medium mb-1">Prompt Template</label>
+        <label className="block text-xs font-medium mb-1">提示词模板</label>
         <textarea
           value={promptTemplate}
           onChange={(e) => setPromptTemplate(e.target.value)}
           rows={4}
-          placeholder="Enter the prompt template. Use {{paramName}} for parameter placeholders."
+          placeholder="输入提示词模板，使用 {{参数名}} 作为参数占位符"
           className="w-full rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 py-1.5 text-sm font-mono resize-y"
         />
         {paramNames.length > 0 && (
           <p className="text-[10px] text-gray-400 mt-0.5">
-            Available variables: {paramNames.join(", ")}
+            可用变量: {paramNames.join(", ")}
           </p>
         )}
       </div>
@@ -426,7 +426,7 @@ function CreateSkillForm({ onCreated, initialData }: { onCreated: () => void; in
           disabled={!name.trim() || !promptTemplate.trim() || saving}
           className="rounded bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white px-3 py-1.5 text-sm font-medium transition-colors"
         >
-          {saving ? "Creating..." : "Create"}
+          {saving ? "创建中..." : "创建"}
         </button>
       </div>
     </div>
@@ -500,7 +500,7 @@ function EditSkillForm({
       )}
 
       <div>
-        <label className="block text-xs font-medium mb-1">Name</label>
+        <label className="block text-xs font-medium mb-1">名称</label>
         <input
           value={name}
           onChange={(e) => setName(e.target.value.replace(/\s+/g, "_"))}
@@ -509,7 +509,7 @@ function EditSkillForm({
       </div>
 
       <div>
-        <label className="block text-xs font-medium mb-1">Description</label>
+        <label className="block text-xs font-medium mb-1">描述</label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -519,7 +519,7 @@ function EditSkillForm({
       </div>
 
       <div>
-        <label className="block text-xs font-medium mb-1">Parameters</label>
+        <label className="block text-xs font-medium mb-1">参数</label>
         <div className="space-y-2">
           {parameters.map((param, idx) => (
             <ParameterRow
@@ -534,12 +534,12 @@ function EditSkillForm({
           onClick={addParam}
           className="mt-2 text-xs text-blue-500 hover:text-blue-700"
         >
-          + Add Parameter
+          + 添加参数
         </button>
       </div>
 
       <div>
-        <label className="block text-xs font-medium mb-1">Prompt Template</label>
+        <label className="block text-xs font-medium mb-1">提示词模板</label>
         <textarea
           value={promptTemplate}
           onChange={(e) => setPromptTemplate(e.target.value)}
@@ -548,7 +548,7 @@ function EditSkillForm({
         />
         {paramNames.length > 0 && (
           <p className="text-[10px] text-gray-400 mt-0.5">
-            Available: {paramNames.join(", ")}
+            可用: {paramNames.join(", ")}
           </p>
         )}
       </div>
@@ -559,7 +559,7 @@ function EditSkillForm({
           disabled={saving}
           className="rounded bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white px-3 py-1.5 text-sm font-medium transition-colors"
         >
-          {saving ? "Saving..." : "Save"}
+          {saving ? "保存中..." : "保存"}
         </button>
       </div>
     </div>
@@ -590,11 +590,10 @@ function ImportUrlForm({ onImported }: { onImported: (data: CustomSkillData) => 
   return (
     <div className="rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-900/20 p-4 space-y-3">
       <h3 className="text-sm font-semibold text-purple-700 dark:text-purple-300">
-        Import Skill from URL
+        从链接导入技能
       </h3>
       <p className="text-xs text-gray-500 dark:text-gray-400">
-        Paste a URL to a skill repository (GitHub, ClaHub, etc.) or documentation page.
-        The AI agent will fetch, analyze, and extract the skill definition automatically.
+        粘贴技能仓库（GitHub、ClaHub 等）或文档页面的链接，AI Agent 会自动获取、分析并提取技能定义。
       </p>
 
       {error && (
@@ -620,17 +619,17 @@ function ImportUrlForm({ onImported }: { onImported: (data: CustomSkillData) => 
           {loading ? (
             <span className="flex items-center gap-2">
               <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              Analyzing...
+              分析中...
             </span>
           ) : (
-            "Import"
+            "导入"
           )}
         </button>
       </div>
 
       {loading && (
         <p className="text-xs text-purple-500 dark:text-purple-400 animate-pulse">
-          Agent is fetching and analyzing the URL... This may take a moment.
+          Agent 正在获取和分析链接... 请稍候。
         </p>
       )}
     </div>
@@ -653,7 +652,7 @@ function ParameterRow({
       <input
         value={param.name}
         onChange={(e) => onChange({ name: e.target.value.replace(/\s+/g, "_") })}
-        placeholder="name"
+        placeholder="名称"
         className="w-28 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 py-1 text-xs font-mono"
       />
       <select
@@ -670,7 +669,7 @@ function ParameterRow({
       <input
         value={param.description}
         onChange={(e) => onChange({ description: e.target.value })}
-        placeholder="description"
+        placeholder="描述"
         className="flex-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 py-1 text-xs"
       />
       <label className="flex items-center gap-1 text-xs text-gray-500 shrink-0">
@@ -680,7 +679,7 @@ function ParameterRow({
           onChange={(e) => onChange({ required: e.target.checked })}
           className="rounded"
         />
-        req
+        必填
       </label>
       <button
         onClick={onRemove}
